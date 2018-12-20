@@ -14,8 +14,5 @@ code {
 }
 
 .panel .panel-default{
-  border-color: #42b549
-}
-.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover{
-  background-color: #42b549
+  border-color: #C0C0C0
 }

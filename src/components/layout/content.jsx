@@ -32,12 +32,12 @@ export default class Content extends Component {
     this.col = [];
   }
 
-  componentDidMount() {
-    console.log("this.props content: ", this.props);
-  }
-
   getData(page, param, title) {
-    console.log("getData");
+    let idMovie = this.props.match.url.split("/");
+    if (idMovie[1] !== "") {
+      param = idMovie[1];
+      this.param = param;
+    }
 
     this.setState({ initialLoad: false });
 
@@ -112,9 +112,9 @@ export default class Content extends Component {
     slug = slug.join("-");
     let shortDesc = detail.overview.substring(0, 75);
     if (detail.overview === "") {
-      shortDesc = "belum ada sinopsis cerita dalam Bahasa Indonesia"
+      shortDesc = "belum ada sinopsis cerita dalam Bahasa Indonesia";
     }
-    
+
     return (
       <div className="col-sm-3" key={detail.id} align="center">
         <Panel>
@@ -166,9 +166,12 @@ export default class Content extends Component {
                     {shortDesc.substring(
                       0,
                       Math.min(shortDesc.length, shortDesc.lastIndexOf(" "))
-                    )}{" "}
-                     ...
-                    <Link to={"/" + detail.id + "-" + slug}> selengkapnya</Link>
+                    )}
+                    ...
+                    <Link to={"/detail/" + detail.id + "-" + slug}>
+                      {" "}
+                      selengkapnya
+                    </Link>
                   </small>
                 </span>
               </div>

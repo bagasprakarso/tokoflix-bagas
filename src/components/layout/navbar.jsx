@@ -5,9 +5,6 @@ import { Link } from "react-router-dom";
 
 export default class Navbar extends Component {
 
-  componentDidMount(){
-    console.log('this.props Navbar: ', this.props);
-  }
   render() {
     return (
       <Panel
@@ -33,17 +30,17 @@ export default class Navbar extends Component {
                 </Link>
               </div>
               <div className="col-md-2">
-                <Link to="/" key={"popular"}>
+                <Link to="/popular" key={"popular"}>
                   Popular
                 </Link>
               </div>
               <div className="col-md-2">
-                <Link to="/" key={"top_rated"}>
+                <Link to="/top_rated" key={"top_rated"}>
                   Top Rating
                 </Link>
               </div>
               <div className="col-md-2">
-                <Link to="/" key={"upcoming"}>
+                <Link to="/upcoming" key={"upcoming"}>
                   Coming Soon
                 </Link>
               </div>

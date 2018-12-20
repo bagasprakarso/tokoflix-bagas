@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Label } from "react-bootstrap/lib";
 import CurrencyFormat from "react-currency-format";
 
+
 export default class Home extends Component {
   constructor(props) {
     super(props);
@@ -15,11 +16,12 @@ export default class Home extends Component {
       userData: [],
       paidElement: []
     };
-    this.handleClick = this.handleClick.bind(this);
+    this.buyMovie = this.buyMovie.bind(this);
     this.countPrice = this.countPrice.bind(this);
     this.getPaid = this.getPaid.bind(this);
   }
-  handleClick(id, vote_average) {
+
+  buyMovie(id, vote_average) {
     let userData = this.state.userData;
     const found = userData.find(data => data.id === id);
     const price = this.countPrice(vote_average);
@@ -34,7 +36,7 @@ export default class Home extends Component {
       alert("Film Ini Sudah Anda Miliki!");
     }
   }
-
+  
   countPrice(rate) {
     let valPrice;
     if (rate < 3) {
@@ -116,11 +118,47 @@ export default class Home extends Component {
             )}
           />
           <Route
-            path="/:id"
+            path="/popular"
+            render={props => (
+              <Content
+                {...props}
+                balance={this.state.balance}
+                userData={this.state.userData}
+                getPaid={this.getPaid}
+                paidElement={this.state.paidElement}
+              />
+            )}
+          />
+          <Route
+            path="/top_rated"
+            render={props => (
+              <Content
+                {...props}
+                balance={this.state.balance}
+                userData={this.state.userData}
+                getPaid={this.getPaid}
+                paidElement={this.state.paidElement}
+              />
+            )}
+          />
+          <Route
+            path="/upcoming"
+            render={props => (
+              <Content
+                {...props}
+                balance={this.state.balance}
+                userData={this.state.userData}
+                getPaid={this.getPaid}
+                paidElement={this.state.paidElement}
+              />
+            )}
+          />
+          <Route
+            path="/detail/:id"
             render={props => (
               <ContentDetail
                 {...props}
-                handleClick={this.handleClick}
+                buyMovie={this.buyMovie}
                 balance={this.state.balance}
                 userData={this.state.userData}
                 getPaid={this.getPaid}
