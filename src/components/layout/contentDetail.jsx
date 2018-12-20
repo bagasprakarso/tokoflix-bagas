@@ -124,6 +124,29 @@ export default class ContentDetail extends Component {
                       padding: "0px"
                     }}
                   >
+                    <h4 align="justify">Cast:</h4>
+                  </div>
+                  <div className="col-md-10">
+                    <p
+                      align="justify"
+                      style={{
+                        marginTop: "10px",
+                        marginBottom: "10px"
+                      }}
+                    >
+                      {this.getCast(detail.credits.cast)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-6">
+                  <div
+                    className="col-md-2"
+                    style={{
+                      padding: "0px"
+                    }}
+                  >
                     <h4 align="justify">Sinopsis: </h4>
                   </div>
                   <div className="col-md-10">
@@ -137,29 +160,6 @@ export default class ContentDetail extends Component {
                       {detail.overview === ""
                         ? "belum ada sinopsis cerita dalam Bahasa Indonesia"
                         : detail.overview}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-6">
-                  <div
-                    className="col-md-2"
-                    style={{
-                      padding: "0px"
-                    }}
-                  >
-                    <h4 align="justify">Cast:</h4>
-                  </div>
-                  <div className="col-md-10">
-                    <p
-                      align="justify"
-                      style={{
-                        marginTop: "10px",
-                        marginBottom: "10px"
-                      }}
-                    >
-                      {this.getCast(detail.credits.cast)}
                     </p>
                   </div>
                 </div>
