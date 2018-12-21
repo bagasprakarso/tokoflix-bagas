@@ -3,40 +3,44 @@ import { Panel, Button, Glyphicon } from "react-bootstrap/lib";
 import axios from "axios";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
+import { Link } from "react-router-dom";
 
 export default class ContentDetail extends Component {
   state = {
     apiKey: "?api_key=952881c1a8d0f4b3e98d6063f868ed4d",
     movieUrl: "https://api.themoviedb.org/3/movie",
-    moviesData: [],
-    nowPlaying: [],
     imgPathW185: "https://image.tmdb.org/t/p/w185/",
-    imgPathW200: "https://image.tmdb.org/t/p/w200/",
     imgPathW300: "https://image.tmdb.org/t/p/w300/",
-    price: 0,
-    collection: [],
-    initialLoad: true,
-    hasMore: true,
-    row: []
+    row: [],
+    paidElement: []
   };
 
   constructor(props) {
     super(props);
-    this.param = "";
-    this.page = 0;
     this.col = [];
     this.isLoaded = false;
     this.reponseData = [];
     this.handleOnDragStart = e => e.preventDefault();
-    this.similarData = [];
     this.similarMovies = [];
     this.recomendationsMovies = [];
     this.responsive = { 0: { items: 2 } };
+    this.url = "";
+  }
+
+  componentDidUpdate() {
+    if (this.url !== this.props.match.url) {
+      let idMovie = this.props.match.url.split("/");
+      idMovie = idMovie[2].replace("/", "");
+      idMovie = idMovie.split("-");
+      this.isLoaded = false;
+      this.getDataDetail(idMovie[0]);
+    }
+  }
+  componentWillUpdate() {
+    this.url = this.props.match.url;
   }
 
   getDataDetail(id) {
-    console.log("berapa kali");
-
     if (this.isLoaded === false) {
       const urlDetail =
         this.state.movieUrl +
@@ -53,88 +57,72 @@ export default class ContentDetail extends Component {
     }
   }
 
-  getCast(casts) {
-    let _casts = "";
+  getCastGenres(data) {
+    console.log(data);
 
-    for (let i = 0; i < 40; i++) {
-      _casts = _casts + ", " + casts[i].name;
+    let length = 40;
+    if (data.length < length) {
+      length = data.length;
     }
-    return _casts.replace(",", "");
+    let _data = "";
+
+    for (let i = 0; i < length; i++) {
+      _data = _data + ", " + data[i].name;
+    }
+    return _data.replace(",", "");
   }
 
-  getSimilar(detail) {
-    const similarData = detail.similar.results;
-    this.similarMovies = [];
-    for (let i = 0; i < detail.similar.results.length; i++) {
-      let shortDesc = similarData[i].title.substring(0, 14);
+  getSimilarRecommendations(detail, type) {
+    let movies = [];
+    for (let i = 0; i < detail.length; i++) {
+      let slug = detail[i].title.split(" ");
+      slug = slug.join("-");
+      let shortDesc = detail[i].title.substring(0, 14);
       shortDesc.substring(
         0,
         Math.min(shortDesc.length, shortDesc.lastIndexOf(" "))
       );
-      shortDesc = shortDesc + '..';
-      this.similarMovies.push(
-        <div key={similarData[i].id}>
-          <img
-            key={similarData[i]}
-            src={this.state.imgPathW185 + similarData[i].backdrop_path}
-            alt=""
-            onDragStart={this.handleOnDragStart}
-          />
-          <div className="row">
-            <div className="col-xs-7">{shortDesc}</div>
-            <div
-              className="col-xs-5"
-              style={{
-                paddingLeft: "1px"
-              }}
-            >
-              <Glyphicon glyph="star" /> {similarData[i].vote_average}
+      shortDesc = shortDesc + "..";
+      movies.push(
+        <div key={detail[i].id}>
+          <Link to={"/detail/" + detail[i].id + "-" + slug} key={detail[i].id}>
+            <img
+              key={detail[i]}
+              src={this.state.imgPathW185 + detail[i].backdrop_path}
+              alt=""
+              onDragStart={this.handleOnDragStart}
+            />
+            <div className="row">
+              <div className="col-xs-7">{shortDesc}</div>
+              <div
+                className="col-xs-5"
+                style={{
+                  paddingLeft: "1px"
+                }}
+              >
+                <Glyphicon glyph="star" /> {detail[i].vote_average}
+              </div>
             </div>
-          </div>
+          </Link>
         </div>
       );
     }
-  }
-
-  getRecomendations(detail) {
-    const recomendationsData = detail.recommendations.results;
-
-    this.recomendationsMovies = [];
-    for (let i = 0; i < detail.recommendations.results.length; i++) {
-      let shortDesc = recomendationsData[i].title.substring(0, 14);
-      shortDesc.substring(
-        0,
-        Math.min(shortDesc.length, shortDesc.lastIndexOf(" "))
-      );
-      shortDesc = shortDesc + '..';
-      this.recomendationsMovies.push(
-        <div key={recomendationsData[i].id}>
-          <img
-            key={recomendationsData[i]}
-            src={this.state.imgPathW185 + recomendationsData[i].backdrop_path}
-            alt=""
-            onDragStart={this.handleOnDragStart}
-          />
-          <div className="row">
-            <div className="col-xs-7">{shortDesc}</div>
-            <div
-              className="col-xs-5"
-              style={{
-                paddingLeft: "1px"
-              }}
-            >
-              <Glyphicon glyph="star" /> {recomendationsData[i].vote_average}
-            </div>
-          </div>
-        </div>
-      );
+    if (type === "similar") {
+      this.similarMovies = [];
+      this.similarMovies = movies;
+    } else if (type === "recommendations") {
+      this.recomendationsMovies = [];
+      this.recomendationsMovies = movies;
     }
   }
 
   createContentDetail() {
     const detail = this.reponseData;
-    this.getSimilar(detail);
-    this.getRecomendations(detail);
+    this.getSimilarRecommendations(detail.similar.results, "similar");
+    this.getSimilarRecommendations(
+      detail.recommendations.results,
+      "recommendations"
+    );
     let content = [];
     content.push(
       <Panel key="detail">
@@ -188,7 +176,29 @@ export default class ContentDetail extends Component {
                 </div>
                 <div className="col-xs-4">
                   {this.props.getPaid(detail.id, detail.vote_average)}
-                  {this.props.paidElement}
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-12">
+                  <div
+                    className="col-md-2"
+                    style={{
+                      padding: "0px"
+                    }}
+                  >
+                    <h4 align="justify">Genre:</h4>
+                  </div>
+                  <div className="col-md-10">
+                    <p
+                      align="justify"
+                      style={{
+                        marginTop: "10px",
+                        marginBottom: "10px"
+                      }}
+                    >
+                      {this.getCastGenres(detail.genres)}
+                    </p>
+                  </div>
                 </div>
               </div>
               <div className="row">
@@ -209,7 +219,7 @@ export default class ContentDetail extends Component {
                         marginBottom: "10px"
                       }}
                     >
-                      {this.getCast(detail.credits.cast)}
+                      {this.getCastGenres(detail.credits.cast)}
                     </p>
                   </div>
                 </div>
@@ -275,6 +285,9 @@ export default class ContentDetail extends Component {
       </Panel>
     );
     this.setState({ row: content });
+    this.setState({
+      paidElement: this.props.paidElement
+    });
   }
 
   render() {

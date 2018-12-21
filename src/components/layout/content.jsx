@@ -8,19 +8,14 @@ export default class Content extends Component {
   state = {
     apiKey: "?api_key=952881c1a8d0f4b3e98d6063f868ed4d",
     movieUrl: "https://api.themoviedb.org/3/movie",
-    moviesData: [],
     nowPlaying: [],
     detail: [],
     imgPathW200: "https://image.tmdb.org/t/p/w200/",
-    imgPathW300: "https://image.tmdb.org/t/p/w300/",
-    price: 0,
     row: [],
     title: "Now Playing",
-    collection: [],
     isDetail: false,
     initialLoad: true,
     hasMore: true
-    // param: ""
   };
 
   constructor(props) {
@@ -28,19 +23,23 @@ export default class Content extends Component {
     this.getData = this.getData.bind(this);
     this.param = "";
     this.page = 0;
-    this.row = [];
     this.col = [];
   }
 
   getData(page, param, title) {
+    // get movies list by category -- now playing, popular, top rated, upcoming
+
+    // get id movie
     let idMovie = this.props.match.url.split("/");
     if (idMovie[1] !== "") {
       param = idMovie[1];
       this.param = param;
     }
 
+    // set initialLoad for infinite scroll
     this.setState({ initialLoad: false });
 
+    // set movie category param
     if (param === undefined && this.param === "") {
       this.param = "now_playing";
     } else if (page === -1) {
@@ -120,16 +119,18 @@ export default class Content extends Component {
         <Panel>
           <Panel.Body>
             <div style={{ height: "450px" }}>
-              <img
-                className="card-img-top"
-                src={
-                  detail.poster_path
-                    ? this.state.imgPathW200 + detail.poster_path
-                    : "./no_image.jpg"
-                }
-                alt={detail.original_title}
-                style={{ height: "278px" }}
-              />
+              <Link to={"/detail/" + detail.id + "-" + slug}>
+                <img
+                  className="card-img-top"
+                  src={
+                    detail.poster_path
+                      ? this.state.imgPathW200 + detail.poster_path
+                      : "./no_image.jpg"
+                  }
+                  alt={detail.original_title}
+                  style={{ height: "278px" }}
+                />
+              </Link>
               <h4 style={{ height: "30px" }}>
                 {detail.title +
                   " (" +
@@ -169,7 +170,6 @@ export default class Content extends Component {
                     )}
                     ...
                     <Link to={"/detail/" + detail.id + "-" + slug}>
-                      {" "}
                       selengkapnya
                     </Link>
                   </small>

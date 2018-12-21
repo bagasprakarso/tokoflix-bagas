@@ -7,7 +7,6 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Label } from "react-bootstrap/lib";
 import CurrencyFormat from "react-currency-format";
 
-
 export default class Home extends Component {
   constructor(props) {
     super(props);
@@ -36,8 +35,49 @@ export default class Home extends Component {
       alert("Film Ini Sudah Anda Miliki!");
     }
   }
-  
+
+  getPaid(id, vote_average) {
+    let paidElement = [];
+    if (this.state !== undefined) {
+      // if movies not bought yet
+      let found = this.state.userData.find(data => data.id === id);
+      if (!found) {
+        paidElement.push(
+          <h4 key="nFound" className="text-success">
+            <CurrencyFormat
+              value={this.countPrice(vote_average)}
+              displayType={"text"}
+              thousandSeparator={true}
+              prefix={"Rp. "}
+            />
+          </h4>
+        );
+      } else {
+        // if movies already bought
+        paidElement.push(
+          <h4 key="found" className="text-success">
+            <Label bsStyle="success">Paid</Label>
+          </h4>
+        );
+      }
+    } else {
+      // default condition
+      paidElement.push(
+        <h4 key="undefined" className="text-success">
+          <CurrencyFormat
+            value={this.countPrice(vote_average)}
+            displayType={"text"}
+            thousandSeparator={true}
+            prefix={"Rp. "}
+          />
+        </h4>
+      );
+    }
+    return paidElement;
+  }
+
   countPrice(rate) {
+    // count movie's price by rate
     let valPrice;
     if (rate < 3) {
       valPrice = 3500;
@@ -50,53 +90,6 @@ export default class Home extends Component {
     }
 
     return valPrice;
-  }
-
-  getPaid(id, vote_average) {
-    if (this.state !== undefined) {
-      let found = this.state.userData.find(data => data.id === id);
-      if (!found) {
-        let paidElement = [];
-        paidElement.push(
-          <h4 key="nFound" className="text-success">
-            <CurrencyFormat
-              value={this.countPrice(vote_average)}
-              displayType={"text"}
-              thousandSeparator={true}
-              prefix={"Rp. "}
-            />
-          </h4>
-        );
-        this.setState({
-          paidElement: paidElement
-        });
-      } else {
-        let paidElement = [];
-        paidElement.push(
-          <h4 key="found" className="text-success">  
-          <Label bsStyle="success">Paid</Label> 
-          </h4>
-        );
-        this.setState({
-          paidElement: paidElement
-        });
-      }
-    } else {
-      let paidElement = [];
-      paidElement.push(
-        <h4 key="undefined" className="text-success">
-          <CurrencyFormat
-            value={this.countPrice(vote_average)}
-            displayType={"text"}
-            thousandSeparator={true}
-            prefix={"Rp. "}
-          />
-        </h4>
-      );
-      this.setState({
-        paidElement: paidElement
-      });
-    }
   }
 
   render() {
@@ -113,7 +106,6 @@ export default class Home extends Component {
                 balance={this.state.balance}
                 userData={this.state.userData}
                 getPaid={this.getPaid}
-                paidElement={this.state.paidElement}
               />
             )}
           />
@@ -125,7 +117,6 @@ export default class Home extends Component {
                 balance={this.state.balance}
                 userData={this.state.userData}
                 getPaid={this.getPaid}
-                paidElement={this.state.paidElement}
               />
             )}
           />
@@ -137,7 +128,6 @@ export default class Home extends Component {
                 balance={this.state.balance}
                 userData={this.state.userData}
                 getPaid={this.getPaid}
-                paidElement={this.state.paidElement}
               />
             )}
           />
@@ -149,7 +139,6 @@ export default class Home extends Component {
                 balance={this.state.balance}
                 userData={this.state.userData}
                 getPaid={this.getPaid}
-                paidElement={this.state.paidElement}
               />
             )}
           />
@@ -162,7 +151,6 @@ export default class Home extends Component {
                 balance={this.state.balance}
                 userData={this.state.userData}
                 getPaid={this.getPaid}
-                paidElement={this.state.paidElement}
               />
             )}
           />
