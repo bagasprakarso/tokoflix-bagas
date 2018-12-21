@@ -57,10 +57,12 @@ export default class ContentDetail extends Component {
     }
   }
 
-  getCastGenres(data) {
-    console.log(data);
+  getCastGenres(data, department) {
+    if (department) {
+      data = data.filter(data => data.department === department);
+    }
 
-    let length = 40;
+    let length = 20;
     if (data.length < length) {
       length = data.length;
     }
@@ -176,6 +178,98 @@ export default class ContentDetail extends Component {
                 </div>
                 <div className="col-xs-4">
                   {this.props.getPaid(detail.id, detail.vote_average)}
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-12">
+                  <div
+                    className="col-md-2"
+                    style={{
+                      padding: "0px"
+                    }}
+                  >
+                    <h4 align="justify">Produser:</h4>
+                  </div>
+                  <div className="col-md-10">
+                    <p
+                      align="justify"
+                      style={{
+                        marginTop: "10px",
+                        marginBottom: "00px"
+                      }}
+                    >
+                      {this.getCastGenres(detail.credits.crew, "Production")}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-12">
+                  <div
+                    className="col-md-2"
+                    style={{
+                      padding: "0px"
+                    }}
+                  >
+                    <h4 align="justify">Sutradara:</h4>
+                  </div>
+                  <div className="col-md-10">
+                    <p
+                      align="justify"
+                      style={{
+                        marginTop: "10px",
+                        marginBottom: "00px"
+                      }}
+                    >
+                      {this.getCastGenres(detail.credits.crew, "Directing")}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-12">
+                  <div
+                    className="col-md-2"
+                    style={{
+                      padding: "0px"
+                    }}
+                  >
+                    <h4 align="justify">Penulis:</h4>
+                  </div>
+                  <div className="col-md-10">
+                    <p
+                      align="justify"
+                      style={{
+                        marginTop: "10px",
+                        marginBottom: "010px"
+                      }}
+                    >
+                      {this.getCastGenres(detail.credits.crew, "Writing")}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-12">
+                  <div
+                    className="col-md-2"
+                    style={{
+                      padding: "0px"
+                    }}
+                  >
+                    <h4 align="justify">Produksi:</h4>
+                  </div>
+                  <div className="col-md-10">
+                    <p
+                      align="justify"
+                      style={{
+                        marginTop: "10px",
+                        marginBottom: "10px"
+                      }}
+                    >
+                      {this.getCastGenres(detail.production_companies)}
+                    </p>
+                  </div>
                 </div>
               </div>
               <div className="row">
