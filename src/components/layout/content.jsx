@@ -23,6 +23,7 @@ export default class Content extends Component {
     this.getData = this.getData.bind(this);
     this.param = "";
     this.page = 0;
+    this.row = [];
     this.col = [];
   }
 
